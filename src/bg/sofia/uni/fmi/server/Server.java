@@ -38,23 +38,35 @@ public class Server extends UnicastRemoteObject implements Services, UserManagem
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public boolean isValidUser(String username) throws RemoteException{
-        User tmp = map.get(username);
-        if(tmp == null){
-            return false;
-        }
-        else{
-            return true;
-        }
-    }
+   
 
     @Override
     public void addUser(String username, String password) {
         User user = new User(username,password);
         map.put(username, user);
+        System.out.println(user);
     }
-    public void startServer(){
+
+    @Override
+    public boolean isValidUser(String username, String password) throws RemoteException {
+        User user = map.get(username);
         
+        if(user == null){
+            return false;
+        }
+        else if(user.getPassword().equals(password))
+        {
+            return true;
+        }
+        return false;
     }
+
+    @Override
+    public boolean checkUsername(String username) throws RemoteException {
+        if(map.get(username)==null){
+            return true;
+        }
+        return false;
+    }
+    
 }

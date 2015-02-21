@@ -16,12 +16,45 @@ public class User implements Serializable {
     
     private String username;
     private String password;
+    private String permission;
+
+   
     
 
     public User(String username, String password) {
         setUsername(username);
         setPassword(password);
+        setPermission("");
         
+    }
+
+    public User(String username, String password, String permission) {
+        setPassword(password);
+        setUsername(username);
+        setPermission(permission);
+    }
+
+    public User() {
+        this("John Doe", "0000","none");
+    }
+    
+    public User(User user){
+        this(user.username,user.password,user.permission);
+    }
+
+    public String getPermission() {
+        String tmpPermission = permission;
+        return tmpPermission;
+        
+    }
+
+    public void setPermission(String permission) {
+        if(permission == null || permission.equals("")){
+            this.permission = "none";
+        }
+        else{
+            this.permission = permission;
+        }
     }
 
     
@@ -32,12 +65,10 @@ public class User implements Serializable {
     }
 
     public void setUsername(String username) {
-        if(username != null){
+        if(username != null ){
             this.username = username;
         }
-        else{
-            this.username = "John Doe";
-        }
+        
         
     }
 
@@ -58,6 +89,9 @@ public class User implements Serializable {
     }
 
     
-    
+     @Override
+    public String toString() {
+        return "User{" + "username=" + username + ", password=" + password + '}';
+    }
     
 }

@@ -14,7 +14,7 @@ import java.io.Serializable;
  * @author vankata
  */
 public interface UserManagement extends Serializable {
-    
+    public void addUser(String username, String password, String permission);
     public void addUser(String username, String password);
     
 }

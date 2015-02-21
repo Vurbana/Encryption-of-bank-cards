@@ -15,7 +15,8 @@ import java.rmi.RemoteException;
  * @author vankata
  */
 public interface Services extends Remote{
-    public boolean isValidUser(String username) throws RemoteException;
+    public boolean isValidUser(String username, String password) throws RemoteException;
     public void encrypt(String  cardNumber) throws RemoteException;
     public void decrypt(String number) throws RemoteException;
+    public boolean checkUsername(String username) throws RemoteException;
 }
