@@ -282,10 +282,10 @@ public class Client extends javax.swing.JFrame {
                 try {
                     String encrypted = services.encrypt(cardNumber.getText());
                     services.updateCardNumber(currentUser.getUsername(), cardNumber.getText());
-                    
+                    currentUser.setCardNumber(cardNumber.getText());
                     encryptedNumber.setText(encrypted);
                     services.updateEncryptedCardNumber(currentUser.getUsername(), encrypted);
-                    
+                    currentUser.setEncryptedCardNumber(encrypted);
                     System.out.println(currentUser);
                 } catch (RemoteException ex) {
                     ex.printStackTrace();
@@ -300,13 +300,20 @@ public class Client extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
        String perm = currentUser.getPermission();
        String encrypted = encryptedNumber.getText();
+       
        if(perm.equals("decrypt")|| perm.equals("both")){
            if(!encrypted.matches(pattern)){
                messageField.setText("The given encryption is not valid!");
            }
            else{
+                   
                try {
+                   services.updateEncryptedCardNumber(currentUser.getUsername(), encryptedNumber.getText());
+                    currentUser.setEncryptedCardNumber(encryptedNumber.getText());  
                    String decryption = services.decrypt(encrypted);
+                   
+                   
+                   System.out.println(currentUser);
                    decryptedNumber.setText(decryption);
                    
                } catch (RemoteException ex) {

@@ -1,1 +1,4 @@
-Username: ivan	Password: 12345	Permission: both	Card number: 4563960122001999	Encrypted card number: 9018415677556444
+Username: gosho	Password: 1234	Permission: decrypt	Card number: 	Encrypted card number: 5487274165873318
+Username: ivan	Password: 1234	Permission: both	Card number: 4916717836325419	Encrypted card number: 9461262381870964
+Username: mitko	Password: 123456	Permission: encrypt	Card number: 5487274165873318	Encrypted card number: 0932729610328863
+Username: pesho	Password: qwerty	Permission: none	Card number: 	Encrypted card number: 

@@ -11,6 +11,8 @@ import bg.sofia.uni.fmi.interfaces.Services;
 import bg.sofia.uni.fmi.interfaces.UserManagement;
 import bg.sofia.uni.fmi.luhn.LuhnAlgorithm;
 import bg.sofia.uni.fmi.user.User;
+import bg.sofia.uni.fmi.xmlWritter.UsersDB;
+import java.io.File;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -23,7 +25,8 @@ import java.util.TreeMap;
  */
 public class Server extends UnicastRemoteObject implements Services, UserManagement {
     private Map<String, User> map;
-
+    private UsersDB db;
+    private File xmlFile;
     public Map<String, User> getMap() {
         return map;
     }
@@ -32,10 +35,20 @@ public class Server extends UnicastRemoteObject implements Services, UserManagem
     {
         map = new TreeMap<String, User>();
         cipher = new SubstitutionCipher();
+        db = new UsersDB();
+        xmlFile = new File("users.xml");
+        fillMap();
     }
     
-  
+    public void fillMap(){
+        if(xmlFile.exists()){
+            db.updateServerMap(map);
+        }
+    }
 
+    public void saveUsers(){
+        db.updateXML(map);
+    }
     @Override
     public String encrypt(String cardNumber) throws RemoteException {
         return cipher.encrypt(cardNumber);

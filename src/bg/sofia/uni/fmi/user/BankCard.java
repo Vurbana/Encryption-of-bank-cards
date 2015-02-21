@@ -53,7 +53,7 @@ public class BankCard implements Serializable, Comparable<BankCard> {
     }
 
     public void setEncryptedCardNumber(String encryptedCardNumber) {
-        if(encryptedCardNumber == null || cardNumber.equals("")){
+        if(encryptedCardNumber == null){
             this.encryptedCardNumber = "";
         }
         else{
@@ -64,17 +64,7 @@ public class BankCard implements Serializable, Comparable<BankCard> {
 
     @Override
     public int compareTo(BankCard o) {
-        int x = Integer.parseInt(this.cardNumber);
-        int y = Integer.parseInt(o.cardNumber);
-        if(x < y){
-            return -1;
-        }
-        else if(x == y){
-            return 0;
-        }
-        else{
-            return 1;
-        }
+       return this.getCardNumber().compareTo(o.getCardNumber());
     }
 
     @Override
