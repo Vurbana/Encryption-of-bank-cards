@@ -17,14 +17,34 @@ public class User implements Serializable {
     private String username;
     private String password;
     private String permission;
+    private BankCard card;
 
-   
-    
+    public BankCard getCard() {
+        BankCard tmp = new BankCard(card);
+        return tmp;
+    }
+
+    public void setCard(BankCard card) {
+        if(card != null){
+            this.card = card;
+        }
+        else{
+            this.card = new BankCard();
+        }
+        
+    }
+   public void setCardNumber(String number){
+       card.setCardNumber(number);
+   }
+    public void setEncryptedCardNumber(String number){
+        card.setEncryptedCardNumber(number);
+    }
 
     public User(String username, String password) {
         setUsername(username);
         setPassword(password);
         setPermission("");
+        setCard(null);
         
     }
 
@@ -32,6 +52,7 @@ public class User implements Serializable {
         setPassword(password);
         setUsername(username);
         setPermission(permission);
+        setCard(null);
     }
 
     public User() {
@@ -88,10 +109,12 @@ public class User implements Serializable {
         
     }
 
-    
-     @Override
+    @Override
     public String toString() {
-        return "User{" + "username=" + username + ", password=" + password + '}';
+        return String.format("Username: %s\tPassword: %s\tPermission: %s\tCard number: %s\tEncrypted card number: %s\n", username,password,permission,card.getCardNumber(),card.getEncryptedCardNumber());
     }
+
+    
+   
     
 }

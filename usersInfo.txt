@@ -1,0 +1,1 @@
+Username: ivan	Password: 12345	Permission: both	Card number: 4563960122001999	Encrypted card number: 9018415677556444

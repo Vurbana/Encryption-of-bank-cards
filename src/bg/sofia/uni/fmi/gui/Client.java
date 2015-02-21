@@ -7,6 +7,7 @@
 package bg.sofia.uni.fmi.gui;
 
 import bg.sofia.uni.fmi.interfaces.Services;
+import bg.sofia.uni.fmi.user.User;
 import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -22,6 +23,8 @@ import java.util.logging.Logger;
 public class Client extends javax.swing.JFrame {
     private Services services;
     private Registry registry;
+    private User currentUser;
+    private String pattern = "[0-9]{16}";
     /**
      * Creates new form Client
      */
@@ -87,6 +90,7 @@ public class Client extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         decryptedNumber = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
+        messageField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -117,7 +121,7 @@ public class Client extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(errField, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(LoginPanelLayout.createSequentialGroup()
-                        .addContainerGap(16, Short.MAX_VALUE)
+                        .addContainerGap(17, Short.MAX_VALUE)
                         .addGroup(LoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE)
                             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -126,7 +130,7 @@ public class Client extends javax.swing.JFrame {
                             .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(passField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
                             .addComponent(usernameField, javax.swing.GroupLayout.Alignment.TRAILING))))
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addContainerGap(49, Short.MAX_VALUE))
         );
         LoginPanelLayout.setVerticalGroup(
             LoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -134,31 +138,43 @@ public class Client extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(errField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(7, 7, 7)
-                .addGroup(LoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(usernameField)
+                .addGroup(LoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(LoginPanelLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(usernameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(LoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(passField)
+                .addGroup(LoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(LoginPanelLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(passField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(41, 41, 41))
         );
 
         jButton2.setText("Encrypt");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Decrypt");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText("Credit card number:");
 
         jLabel4.setText("Encrypted credit card number:");
 
         jLabel5.setText("Decrypted number:");
+
+        messageField.setEditable(false);
 
         javax.swing.GroupLayout EncryptionPanelLayout = new javax.swing.GroupLayout(EncryptionPanel);
         EncryptionPanel.setLayout(EncryptionPanelLayout);
@@ -180,14 +196,19 @@ public class Client extends javax.swing.JFrame {
                     .addComponent(jButton3)
                     .addComponent(jButton2))
                 .addGap(183, 183, 183))
+            .addGroup(EncryptionPanelLayout.createSequentialGroup()
+                .addComponent(messageField, javax.swing.GroupLayout.PREFERRED_SIZE, 502, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         EncryptionPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {cardNumber, decryptedNumber, encryptedNumber});
 
         EncryptionPanelLayout.setVerticalGroup(
             EncryptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(EncryptionPanelLayout.createSequentialGroup()
-                .addGap(17, 17, 17)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, EncryptionPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(messageField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(EncryptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(cardNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -211,8 +232,7 @@ public class Client extends javax.swing.JFrame {
             .addGroup(jLayeredPane1Layout.createSequentialGroup()
                 .addComponent(LoginPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(EncryptionPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(234, 234, 234))
+                .addComponent(EncryptionPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 507, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jLayeredPane1Layout.setVerticalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -243,6 +263,8 @@ public class Client extends javax.swing.JFrame {
        if(checkFields()){
            try {
                if(services.isValidUser(usernameField.getText(), new String(passField.getPassword()))){
+                   currentUser = services.getUser(usernameField.getText());
+                   System.out.println(currentUser);
                    LoginPanel.setVisible(false);
                    EncryptionPanel.setVisible(true);
                }
@@ -252,6 +274,66 @@ public class Client extends javax.swing.JFrame {
        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+       String permission = currentUser.getPermission();
+        if(permission.equals("both") || permission.equals("encrypt")){
+            messageField.setText("");
+            if(checkNumber()){  
+                try {
+                    String encrypted = services.encrypt(cardNumber.getText());
+                    services.updateCardNumber(currentUser.getUsername(), cardNumber.getText());
+                    
+                    encryptedNumber.setText(encrypted);
+                    services.updateEncryptedCardNumber(currentUser.getUsername(), encrypted);
+                    
+                    System.out.println(currentUser);
+                } catch (RemoteException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+        else{
+            messageField.setText("You dont have permission!");
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+       String perm = currentUser.getPermission();
+       String encrypted = encryptedNumber.getText();
+       if(perm.equals("decrypt")|| perm.equals("both")){
+           if(!encrypted.matches(pattern)){
+               messageField.setText("The given encryption is not valid!");
+           }
+           else{
+               try {
+                   String decryption = services.decrypt(encrypted);
+                   decryptedNumber.setText(decryption);
+                   
+               } catch (RemoteException ex) {
+                   ex.printStackTrace();
+               }
+           }
+       }else{
+           messageField.setText("You dont have permission!");
+       }
+    }//GEN-LAST:event_jButton3ActionPerformed
+    private boolean checkNumber() {
+        try{
+           String number = cardNumber.getText();
+            if(!number.matches(pattern)){
+                messageField.setText("Card number has to be 16 digits!");
+                return false;
+            }else if(!services.isValidCardNumber(number)){
+                    messageField.setText("Card number is not valid!");
+                    return false;
+                }
+             
+        }catch(RemoteException e){
+            e.printStackTrace();
+        }
+        messageField.setText("");
+        return true;
+    }
     /**
      * @param args the command line arguments
      */
@@ -303,6 +385,7 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLayeredPane jLayeredPane1;
+    private javax.swing.JTextField messageField;
     private javax.swing.JPasswordField passField;
     private javax.swing.JTextField usernameField;
     // End of variables declaration//GEN-END:variables
